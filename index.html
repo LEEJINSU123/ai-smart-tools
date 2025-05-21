@@ -8,33 +8,26 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #f4f4f9; color: #333; display: flex; flex-direction: column; align-items: center; padding: 1em; }
-    .container { width: 100%; max-width: 800px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 2em; }
-    header { text-align: center; margin-bottom: 2em; position: relative; }
-    header h1 { font-size: 2em; font-weight: 600; margin-bottom: 0.5em; }
-    header p { color: #666; }
-    #lang-select { position: absolute; top: 0; right: 0; border: none; background: transparent; font-size: 1em; }
-    section { margin-bottom: 2em; }
-    h2 { font-size: 1.25em; margin-bottom: 0.5em; font-weight: 600; }
-    form input[type="email"], #chat-input { width: calc(100% - 1em); padding: 0.5em; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 0.75em; }
-    button { background: #4a90e2; color: #fff; border: none; padding: 0.75em 1.5em; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .container { width:100%; max-width:800px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); padding:2em; }
+    header { text-align:center; margin-bottom:2em; position:relative; }
+    header h1 { font-size:2em; font-weight:600; }
+    header p { color:#666; }
+    #lang-select { position:absolute; top:0; right:0; border:none; background:transparent; }
+    section { margin-bottom:2em; }
+    h2 { font-size:1.25em; margin-bottom:0.5em; }
+    form input, #chat-input { width:calc(100% - 1em); padding:0.5em; border:1px solid #ccc; border-radius:8px; margin-bottom:0.75em; }
+    button { background:#4a90e2; color:#fff; border:none; padding:0.75em 1.5em; border-radius:8px; cursor:pointer; }
     #chat-window {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5em;
-      padding: 1em;
-      height: 300px;
-      overflow-y: auto;
-      background: #f0f4f8 !important;
-      border: 1px solid #e0e0e5;
-      border-radius: 12px;
+      display:flex; flex-direction:column; gap:0.5em; padding:1em; height:300px;
+      overflow-y:auto; background:#f0f4f8!important; border:1px solid #e0e0e5; border-radius:12px;
     }
-    .message { max-width: 75%; padding: 0.75em 1em; border-radius: 16px; line-height: 1.4; }
-    .message.user { align-self: flex-end; background: #d1e7dd !important; }
-    .message.ai { align-self: flex-start; background: #cfe2ff !important; }
-    ul { list-style: none; }
-    ul li { margin-bottom: 0.5em; padding-left: 1.25em; position: relative; }
-    ul li:before { content: '•'; position: absolute; left: 0; color: #4a90e2; }
-    a { color: #4a90e2; font-weight: 600; }
+    .message { max-width:75%; padding:0.75em 1em; border-radius:16px; line-height:1.4; }
+    .message.user { align-self:flex-end; background:#d1e7dd!important; }
+    .message.ai { align-self:flex-start; background:#cfe2ff!important; }
+    ul { list-style:none; }
+    ul li { padding-left:1.25em; position:relative; }
+    ul li:before { content:'•'; position:absolute; left:0; color:#4a90e2; }
+    a { color:#4a90e2; }
   </style>
 </head>
 <body>
@@ -43,14 +36,7 @@
       <select id="lang-select">
         <option value="en">English</option>
         <option value="zh">繁體中文</option>
-        <option value="es">Español</option>
-        <option value="fr">Français</option>
-        <option value="de">Deutsch</option>
-        <option value="ja">日本語</option>
-        <option value="ko">한국어</option>
-        <option value="pt">Português</option>
-        <option value="ru">Русский</option>
-        <option value="ar">العربية</option>
+        <!-- 其他語言 -->
       </select>
       <h1 id="title"></h1>
       <p id="subtitle"></p>
@@ -93,19 +79,146 @@
 
   <script>
     const translations = {
-      en: { title:'AI Smart Tools', subtitle:'3 free uses, then unlock more', emailHeading:'Subscribe for Updates', emailPlaceholder:'Your email', emailButton:'Subscribe', chatHeading:'AI Chatbot', chatPlaceholder:'Type a message...', sendButton:'Send', usageLabel:'Used {used}/{total} free', paymentHeading:'Unlock More Uses', paymentText:'Free uses exhausted, please pay to unlock:', paymentButton:'Pay Now', featuresHeading:'Popular Features', feature1:'Text Translation (zh↔en)', feature2:'Article Summarization', feature3:'Grammar Check', feature4:'Keyword Extraction', feature5:'SEO Title Suggestions' },
-      zh: { title:'AI 智能工具平台', subtitle:'3 次免費使用，更多功能請解鎖', emailHeading:'訂閱最新功能', emailPlaceholder:'你的郵箱', emailButton:'訂閱', chatHeading:'AI 聊天機器人', chatPlaceholder:'輸入訊息...', sendButton:'發送', usageLabel:'已使用 {used}/{total} 次免費', paymentHeading:'解鎖更多次數', paymentText:'免費次數已用完，請付費解鎖：', paymentButton:'立即支付', featuresHeading:'熱門功能', feature1:'文本翻譯 (中↔英)', feature2:'文章摘要', feature3:'語法檢查', feature4:'關鍵字提取', feature5:'SEO 標題建議' }
+      en: {
+        title: 'AI Smart Tools',
+        subtitle: '3 free uses, then unlock more',
+        emailHeading: 'Subscribe for Updates',
+        emailPlaceholder: 'Your email',
+        emailButton: 'Subscribe',
+        chatHeading: 'AI Chatbot',
+        chatPlaceholder: 'Type a message...',
+        sendButton: 'Send',
+        usageLabel: 'Used {used}/{total} free',
+        paymentHeading: 'Unlock More Uses',
+        paymentText: 'Free uses exhausted, please pay to unlock:',
+        paymentButton: 'Pay Now',
+        featuresHeading: 'Popular Features',
+        feature1: 'Text Translation',
+        feature2: 'Article Summarization',
+        feature3: 'Grammar Check',
+        feature4: 'Keyword Extraction',
+        feature5: 'SEO Title Suggestions'
+      },
+      zh: {
+        title: 'AI 智能工具平台',
+        subtitle: '3 次免費使用，更多功能請解鎖',
+        emailHeading: '訂閱最新功能',
+        emailPlaceholder: '你的郵箱',
+        emailButton: '訂閱',
+        chatHeading: 'AI 聊天機器人',
+        chatPlaceholder: '輸入訊息...',
+        sendButton: '發送',
+        usageLabel: '已使用 {used}/{total} 次免費',
+        paymentHeading: '解鎖更多次數',
+        paymentText: '免費次數已用完，請付費解鎖：',
+        paymentButton: '立即支付',
+        featuresHeading: '熱門功能',
+        feature1: '文本翻譯',
+        feature2: '文章摘要',
+        feature3: '語法檢查',
+        feature4: '關鍵字提取',
+        feature5: 'SEO 標題建議'
+      }
     };
-    const workerUrl='https://mute-hall-8386.ljs54leejinsu88888.workers.dev/';
-    const maxFree=3;
-    let usage=parseInt(localStorage.getItem('ai_usage'))||0;
-    const elems={ title:document.getElementById('title'), subtitle:document.getElementById('subtitle'), emailHeading:document.getElementById('email-heading'), emailInput:document.getElementById('email-input'), emailButton:document.getElementById('email-button'), chatHeading:document.getElementById('chat-heading'), chatInput:document.getElementById('chat-input'), sendButton:document.getElementById('send-button'), usageInfo:document.getElementById('usage-info'), paymentSection:document.getElementById('payment-section'), paymentHeading:document.getElementById('payment-heading'), paymentText:document.getElementById('payment-text'), paymentButton:document.getElementById('payment-button'), featuresHeading:document.getElementById('features-heading'), feature1:document.getElementById('feature1'), feature2:document.getElementById('feature2'), feature3:document.getElementById('feature3'), feature4:document.getElementById('feature4'), feature5:document.getElementById('feature5'), langSelect:document.getElementById('lang-select') };
-    function setLanguage(lang){ const t=translations[lang]||translations.en; elems.title.textContent=t.title; elems.subtitle.textContent=t.subtitle; elems.emailHeading.textContent=t.emailHeading; elems.emailInput.placeholder=t.emailPlaceholder; elems.emailButton.textContent=t.emailButton; elems.chatHeading.textContent=t.chatHeading; elems.chatInput.placeholder=t.chatPlaceholder; elems.sendButton.textContent=t.sendButton; elems.paymentHeading.textContent=t.paymentHeading; elems.paymentText.textContent=t.paymentText; elems.paymentButton.textContent=t.paymentButton; elems.featuresHeading.textContent=t.featuresHeading; elems.feature1.textContent=t.feature1; elems.feature2.textContent=t.feature2; elems.feature3.textContent=t.feature3; elems.feature4.textContent=t.feature4; elems.feature5.textContent=t.feature5; updateUsageLabel(); }
-    function updateUsageLabel(){ const lang=elems.langSelect.value; const t=translations[lang]||translations.en; elems.usageInfo.textContent=t.usageLabel.replace('{used}',usage).replace('{total}',maxFree); if(usage>=maxFree){document.getElementById('chat-section').style.display='none'; elems.paymentSection.style.display='block';}}
-    elems.langSelect.addEventListener('change',()=>{ localStorage.setItem('lang',elems.langSelect.value); setLanguage(elems.langSelect.value); });
-    document.addEventListener('DOMContentLoaded',()=>{ const saved=localStorage.getItem('lang')||navigator.language.slice(0,2); elems.langSelect.value=translations[saved]?saved:'en'; setLanguage(elems.langSelect.value); });
-    document.getElementById('send-button').addEventListener('click',async()=>{
-      const text=elems.chatInput.value.trim(); if(!text||usage>=maxFree) return; const win=document.getElementById('chat-window'); const userDiv=document.createElement('div'); userDiv.classList.add('message','user'); userDiv.textContent=text; win.appendChild(userDiv); elems.chatInput.value=''; try{ const res=await fetch(workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})}); let replyText; const ct=res.headers.get('content-type')||''; if(ct.includes('application/json')){ const json=await res.json(); replyText=json.reply??JSON.stringify(json);}else{replyText=await res.text();} const aiDiv=document.createElement('div'); aiDiv.classList.add('message','ai'); aiDiv.textContent=replyText; win.appendChild(aiDiv); usage++; localStorage.setItem('ai_usage',usage); updateUsageLabel(); win.scrollTop=win.scrollHeight;}catch(e){console.error(e);} });
+
+    const workerUrl = 'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/';
+    const maxFree = 3;
+    let usage = parseInt(localStorage.getItem('ai_usage')) || 0;
+
+    const elems = {
+      title: document.getElementById('title'),
+      subtitle: document.getElementById('subtitle'),
+      emailHeading: document.getElementById('email-heading'),
+      emailInput: document.getElementById('email-input'),
+      emailButton: document.getElementById('email-button'),
+      chatHeading: document.getElementById('chat-heading'),
+      chatInput: document.getElementById('chat-input'),
+      sendButton: document.getElementById('send-button'),
+      usageInfo: document.getElementById('usage-info'),
+      paymentSection: document.getElementById('payment-section'),
+      paymentHeading: document.getElementById('payment-heading'),
+      paymentText: document.getElementById('payment-text'),
+      paymentButton: document.getElementById('payment-button'),
+      featuresHeading: document.getElementById('features-heading'),
+      feature1: document.getElementById('feature1'),
+      feature2: document.getElementById('feature2'),
+      feature3: document.getElementById('feature3'),
+      feature4: document.getElementById('feature4'),
+      feature5: document.getElementById('feature5'),
+      langSelect: document.getElementById('lang-select')
+    };
+
+    function setLanguage(lang) {
+      const t = translations[lang] || translations.en;
+      Object.keys(elems).forEach(k => {
+        if (t[k]) elems[k].textContent = t[k].replace ? t[k] : t[k];
+        if (k === 'emailInput' || k === 'chatInput') elems[k].placeholder = t.emailPlaceholder || t.chatPlaceholder;
+      });
+      updateUsageLabel();
+    }
+
+    function updateUsageLabel() {
+      const lang = elems.langSelect.value;
+      const t = translations[lang] || translations.en;
+      elems.usageInfo.textContent =
+        t.usageLabel.replace('{used}', usage).replace('{total}', maxFree);
+      if (usage >= maxFree) {
+        document.getElementById('chat-section').style.display = 'none';
+        elems.paymentSection.style.display = 'block';
+      }
+    }
+
+    elems.langSelect.addEventListener('change', () => {
+      localStorage.setItem('lang', elems.langSelect.value);
+      setLanguage(elems.langSelect.value);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('lang') || navigator.language.slice(0, 2);
+      elems.langSelect.value = translations[saved] ? saved : 'en';
+      setLanguage(elems.langSelect.value);
+    });
+
+    document.getElementById('send-button').addEventListener('click', async () => {
+      const text = elems.chatInput.value.trim();
+      if (!text || usage >= maxFree) return;
+
+      const win = document.getElementById('chat-window');
+      const userDiv = document.createElement('div');
+      userDiv.classList.add('message', 'user');
+      userDiv.textContent = text;
+      win.appendChild(userDiv);
+      elems.chatInput.value = '';
+
+      try {
+        const res = await fetch(workerUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        let replyText;
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('application/json')) {
+          const data = await res.json();
+          replyText = data.reply || 'No reply';
+        } else {
+          replyText = await res.text();
+        }
+
+        const aiDiv = document.createElement('div');
+        aiDiv.classList.add('message', 'ai');
+        aiDiv.textContent = replyText;
+        win.appendChild(aiDiv);
+
+        usage++;
+        localStorage.setItem('ai_usage', usage);
+        updateUsageLabel();
+        win.scrollTop = win.scrollHeight;
+      } catch (e) {
+        console.error(e);
+      }
+    });
   </script>
 </body>
 </html>
