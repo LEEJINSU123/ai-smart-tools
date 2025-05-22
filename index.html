@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Smart Tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 智能工具平台</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    /* ===== 全局重置 ===== */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', sans-serif;
       background: #f4f4f9;
       color: #333;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       align-items: center;
       padding: 1em;
     }
+
+    /* ===== 容器 ===== */
     .container {
       width: 100%; max-width: 800px;
       background: #fff;
@@ -28,60 +30,75 @@
       margin-bottom: 2em;
       position: relative;
     }
-    header h1 { font-size: 2em; font-weight: 600; }
-    header p  { color: #666; }
-    #lang-select {
-      position: absolute; top: 0; right: 0;
-      border: none; background: transparent;
+    header h1 {
+      font-size: 2em; font-weight: 600;
+      margin-bottom: 0.5em;
     }
-    section { margin-bottom: 2em; }
-    h2 { font-size: 1.25em; margin-bottom: 0.5em; }
-    form input[type="email"] {
-      width: calc(100% - 1em);
-      padding: 0.5em; border: 1px solid #ccc;
-      border-radius: 8px; margin-bottom: 0.75em;
-    }
-    /* 单独给聊天输入框占位符 */
+    header p { color: #666; }
+
+    /* ===== 表单 & 按钮 ===== */
+    form input[type="email"],
     #chat-input {
       width: calc(100% - 1em);
-      padding: 0.5em; border: 1px solid #ccc;
-      border-radius: 8px; margin-bottom: 0.75em;
+      padding: 0.5em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 0.75em;
+      font-size: 1em;
+    }
+    #chat-input::placeholder {
+      color: #999 !important;
+      opacity: 1 !important;
     }
     button {
-      background: #4a90e2; color: #fff;
-      border: none; padding: 0.75em 1.5em;
-      border-radius: 8px; cursor: pointer;
-      font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: #4a90e2;
+      color: #fff;
+      border: none;
+      padding: 0.75em 1.5em;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    /* 美化聊天区背景 & 增加磨砂效果 */
+
+    /* ===== 聊天区 ===== */
     #chat-window {
-      display: flex; flex-direction: column; gap: 0.5em;
-      padding: 1em; height: 300px; overflow-y: auto;
-      background: url('https://your-cdn.com/chat-bg.png') no-repeat center/cover !important;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.1),
-                  0 4px 12px rgba(0,0,0,0.05);
-      border: none; border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+      padding: 1em;
+      height: 300px;
+      overflow-y: auto;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb) !important;
+      border: 1px solid #e0e0e5;
+      border-radius: 12px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
     .message {
-      max-width: 75%; padding: 0.75em 1em;
-      border-radius: 16px; line-height: 1.4;
-      backdrop-filter: blur(4px);
+      max-width: 75%;
+      padding: 0.75em 1em;
+      border-radius: 16px;
+      line-height: 1.4;
     }
     .message.user {
       align-self: flex-end;
-      background: rgba(209,231,221,0.8) !important;
+      background: #d1e7dd !important;
     }
     .message.ai {
       align-self: flex-start;
-      background: rgba(207,226,255,0.8) !important;
+      background: #cfe2ff !important;
     }
+
+    /* ===== 列表 & 链接 ===== */
     ul { list-style: none; }
     ul li {
-      margin-bottom: 0.5em; padding-left: 1.25em;
+      margin-bottom: 0.5em;
+      padding-left: 1.25em;
       position: relative;
     }
     ul li:before {
-      content: '•'; position: absolute; left: 0;
+      content: '•';
+      position: absolute; left: 0;
       color: #4a90e2;
     }
     a { color: #4a90e2; font-weight: 600; }
@@ -106,6 +123,7 @@
       <p id="subtitle"></p>
     </header>
 
+    <!-- 订阅表单 -->
     <section>
       <h2 id="email-heading"></h2>
       <form name="emailSignup" method="POST" data-netlify="true">
@@ -115,6 +133,7 @@
       </form>
     </section>
 
+    <!-- 聊天区 -->
     <section id="chat-section">
       <h2 id="chat-heading"></h2>
       <div id="chat-window"></div>
@@ -123,12 +142,14 @@
       <p id="usage-info"></p>
     </section>
 
+    <!-- 付费提示 -->
     <section id="payment-section" style="display:none;">
       <h2 id="payment-heading"></h2>
       <p id="payment-text"></p>
       <a id="payment-button" href="https://buy.stripe.com/test_fZubJ3a3Y9mk2daaG53oA02" target="_blank"></a>
     </section>
 
+    <!-- 热门功能 -->
     <section>
       <h2 id="features-heading"></h2>
       <ul>
@@ -142,77 +163,60 @@
   </div>
 
   <script>
+    // 文案翻译
     const translations = {
       en: {
-        title: 'AI Smart Tools',
-        subtitle: '3 free uses, then unlock more',
-        emailHeading: 'Subscribe for Updates',
-        emailPlaceholder: 'Your email',
-        emailButton: 'Subscribe',
-        chatHeading: 'AI Chatbot',
-        chatPlaceholder: 'Type a message...',
-        sendButton: 'Send',
-        usageLabel: 'Used {used}/{total} free',
-        paymentHeading: 'Unlock More Uses',
-        paymentText: 'Free uses exhausted, please pay to unlock:',
-        paymentButton: 'Pay Now',
-        featuresHeading: 'Popular Features',
-        feature1: 'Text Translation (zh↔en)',
-        feature2: 'Article Summarization',
-        feature3: 'Grammar Check',
-        feature4: 'Keyword Extraction',
-        feature5: 'SEO Title Suggestions'
+        title:'AI Smart Tools', subtitle:'3 free uses, then unlock more',
+        emailHeading:'Subscribe for Updates', emailPlaceholder:'Your email', emailButton:'Subscribe',
+        chatHeading:'AI Chatbot', chatPlaceholder:'Type a message…', sendButton:'Send',
+        usageLabel:'Used {used}/{total} free', paymentHeading:'Unlock More Uses',
+        paymentText:'Free uses exhausted, please pay to unlock:', paymentButton:'Pay Now',
+        featuresHeading:'Popular Features',
+        feature1:'Text Translation (zh↔en)', feature2:'Article Summarization',
+        feature3:'Grammar Check', feature4:'Keyword Extraction', feature5:'SEO Title Suggestions'
       },
       zh: {
-        title: 'AI 智能工具平台',
-        subtitle: '3 次免費使用，更多功能請解鎖',
-        emailHeading: '訂閱最新功能',
-        emailPlaceholder: '你的郵箱',
-        emailButton: '訂閱',
-        chatHeading: 'AI 聊天機器人',
-        chatPlaceholder: '輸入訊息…',
-        sendButton: '發送',
-        usageLabel: '已使用 {used}/{total} 次免費',
-        paymentHeading: '解鎖更多次數',
-        paymentText: '免費次數已用完，請付費解鎖：',
-        paymentButton: '立即支付',
-        featuresHeading: '熱門功能',
-        feature1: '文本翻譯 (中↔英)',
-        feature2: '文章摘要',
-        feature3: '語法檢查',
-        feature4: '關鍵字提取',
-        feature5: 'SEO 標題建議'
-      }
-      // 其他語言同理…
+        title:'AI 智能工具平台', subtitle:'3 次免費使用，更多功能請解鎖',
+        emailHeading:'訂閱最新功能', emailPlaceholder:'你的郵箱', emailButton:'訂閱',
+        chatHeading:'AI 聊天機器人', chatPlaceholder:'輸入訊息…', sendButton:'發送',
+        usageLabel:'已使用 {used}/{total} 次免費', paymentHeading:'解鎖更多次數',
+        paymentText:'免費次數已用完，請付費解鎖：', paymentButton:'立即支付',
+        featuresHeading:'熱門功能',
+        feature1:'文本翻譯 (中↔英)', feature2:'文章摘要',
+        feature3:'語法檢查', feature4:'關鍵字提取', feature5:'SEO 標題建議'
+      },
+      // …可按需补充其它语言
     };
 
     const workerUrl = 'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/';
     const maxFree = 3;
     let usage = parseInt(localStorage.getItem('ai_usage')) || 0;
 
+    // 快捷拿元素
     const elems = {
-      title: document.getElementById('title'),
-      subtitle: document.getElementById('subtitle'),
-      emailHeading: document.getElementById('email-heading'),
-      emailInput: document.getElementById('email-input'),
-      emailButton: document.getElementById('email-button'),
-      chatHeading: document.getElementById('chat-heading'),
-      chatInput: document.getElementById('chat-input'),
-      sendButton: document.getElementById('send-button'),
-      usageInfo: document.getElementById('usage-info'),
-      paymentSection: document.getElementById('payment-section'),
-      paymentHeading: document.getElementById('payment-heading'),
-      paymentText: document.getElementById('payment-text'),
-      paymentButton: document.getElementById('payment-button'),
-      featuresHeading: document.getElementById('features-heading'),
-      feature1: document.getElementById('feature1'),
-      feature2: document.getElementById('feature2'),
-      feature3: document.getElementById('feature3'),
-      feature4: document.getElementById('feature4'),
-      feature5: document.getElementById('feature5'),
-      langSelect: document.getElementById('lang-select')
+      title:document.getElementById('title'),
+      subtitle:document.getElementById('subtitle'),
+      emailHeading:document.getElementById('email-heading'),
+      emailInput:document.getElementById('email-input'),
+      emailButton:document.getElementById('email-button'),
+      chatHeading:document.getElementById('chat-heading'),
+      chatInput:document.getElementById('chat-input'),
+      sendButton:document.getElementById('send-button'),
+      usageInfo:document.getElementById('usage-info'),
+      paymentSection:document.getElementById('payment-section'),
+      paymentHeading:document.getElementById('payment-heading'),
+      paymentText:document.getElementById('payment-text'),
+      paymentButton:document.getElementById('payment-button'),
+      featuresHeading:document.getElementById('features-heading'),
+      feature1:document.getElementById('feature1'),
+      feature2:document.getElementById('feature2'),
+      feature3:document.getElementById('feature3'),
+      feature4:document.getElementById('feature4'),
+      feature5:document.getElementById('feature5'),
+      langSelect:document.getElementById('lang-select')
     };
 
+    // 切换语言 & 更新文案
     function setLanguage(lang) {
       const t = translations[lang] || translations.en;
       elems.title.textContent       = t.title;
@@ -221,73 +225,81 @@
       elems.emailInput.placeholder  = t.emailPlaceholder;
       elems.emailButton.textContent = t.emailButton;
       elems.chatHeading.textContent = t.chatHeading;
-      // —— 这里改为 chatPlaceholder
       elems.chatInput.placeholder   = t.chatPlaceholder;
       elems.sendButton.textContent  = t.sendButton;
       elems.paymentHeading.textContent = t.paymentHeading;
-      elems.paymentText.textContent    = t.paymentText;
-      elems.paymentButton.textContent  = t.paymentButton;
-      elems.featuresHeading.textContent= t.featuresHeading;
-      elems.feature1.textContent       = t.feature1;
-      elems.feature2.textContent       = t.feature2;
-      elems.feature3.textContent       = t.feature3;
-      elems.feature4.textContent       = t.feature4;
-      elems.feature5.textContent       = t.feature5;
+      elems.paymentText.textContent = t.paymentText;
+      elems.paymentButton.textContent = t.paymentButton;
+      elems.featuresHeading.textContent = t.featuresHeading;
+      elems.feature1.textContent    = t.feature1;
+      elems.feature2.textContent    = t.feature2;
+      elems.feature3.textContent    = t.feature3;
+      elems.feature4.textContent    = t.feature4;
+      elems.feature5.textContent    = t.feature5;
       updateUsageLabel();
     }
 
+    // 显示剩余次数 / 切换到付费区
     function updateUsageLabel() {
       const lang = elems.langSelect.value;
       const t = translations[lang] || translations.en;
-      elems.usageInfo.textContent =
-        t.usageLabel.replace('{used}', usage).replace('{total}', maxFree);
+      elems.usageInfo.textContent = t.usageLabel
+        .replace('{used}', usage)
+        .replace('{total}', maxFree);
       if (usage >= maxFree) {
         document.getElementById('chat-section').style.display = 'none';
         elems.paymentSection.style.display = 'block';
       }
     }
 
+    // 保存语言偏好
     elems.langSelect.addEventListener('change', () => {
       localStorage.setItem('lang', elems.langSelect.value);
       setLanguage(elems.langSelect.value);
     });
 
+    // 页面加载先初始化语言和文案
     document.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('lang') || navigator.language.slice(0,2);
       elems.langSelect.value = translations[saved] ? saved : 'en';
       setLanguage(elems.langSelect.value);
     });
 
+    // 发送聊天
     elems.sendButton.addEventListener('click', async () => {
       const text = elems.chatInput.value.trim();
+      // 只有当已使用次数 < 最大免费次数 才允许发送
       if (!text || usage >= maxFree) return;
 
-      const win = elems.chatWindow = document.getElementById('chat-window');
+      const win = document.getElementById('chat-window');
+      // 显示用户消息
       const userDiv = document.createElement('div');
       userDiv.classList.add('message','user');
       userDiv.textContent = text;
       win.appendChild(userDiv);
-      elems.chatInput.value = '';
 
+      elems.chatInput.value = '';
       try {
+        // 调用 Cloudflare Worker
         const res = await fetch(workerUrl, {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ message: text })
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ message:text })
         });
-        const ct = res.headers.get('content-type') || '';
         let replyText;
-        if (ct.includes('application/json')) {
+        if (res.headers.get('content-type')?.includes('application/json')) {
           const json = await res.json();
-          replyText = json.reply;
+          replyText = json.reply || JSON.stringify(json);
         } else {
           replyText = await res.text();
         }
+        // 显示 AI 回复
         const aiDiv = document.createElement('div');
         aiDiv.classList.add('message','ai');
         aiDiv.textContent = replyText;
         win.appendChild(aiDiv);
 
+        // 更新使用次数
         usage++;
         localStorage.setItem('ai_usage', usage);
         updateUsageLabel();
