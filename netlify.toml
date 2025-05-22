@@ -1,0 +1,10 @@
+# netlify.toml
+
+[build]
+  # 不需要构建命令，直接发布根目录
+  publish = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
