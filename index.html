@@ -1,116 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Smart Tools</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: #f4f4f9; color: #333; display: flex; flex-direction: column; align-items: center; padding: 1em; }
-    .container { width: 100%; max-width: 800px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 2em; }
-
-    header { text-align: center; margin-bottom: 2em; position: relative; }
-    header h1 { font-size: 2em; font-weight: 600; margin-bottom: 0.5em; }
-    header p { color: #666; }
-
-    /* 订阅部分先隐藏 */
-    #email-section { display: none; }
-
-    section { margin-bottom: 2em; }
-    h2 { font-size: 1.25em; margin-bottom: 0.5em; font-weight: 600; }
-
-    /* 聊天区美化 */
-    #chat-window {
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f4f9;
+      color: #333;
       display: flex;
       flex-direction: column;
-      gap: 0.5em;
+      align-items: center;
       padding: 1em;
-      height: 300px;
-      overflow-y: auto;
-      background: linear-gradient(135deg, #e0f7fa, #e8eaf6) !important;
-      border: 1px solid #e0e0e5;
+    }
+    .container {
+      width: 100%; max-width: 800px;
+      background: #fff;
       border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 2em;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2em;
+      position: relative;
+    }
+    header h1 { font-size: 2em; font-weight: 600; margin-bottom: 0.5em; }
+    header p { color: #666; }
+    #lang-select {
+      position: absolute; top: 0; right: 0;
+      border: none; background: transparent;
+      font-size: 1em;
+    }
+    section { margin-bottom: 2em; }
+    h2 { font-size: 1.25em; margin-bottom: 0.5em; font-weight: 600; }
+    #chat-window {
+      display: flex; flex-direction: column; gap: 0.5em;
+      padding: 1em; height: 300px; overflow-y: auto;
+      background: linear-gradient(135deg, #e0f7fa, #e8eaf6) !important;
+      border: 1px solid #e0e0e5; border-radius: 12px;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
     .message {
-      max-width: 75%;
-      padding: 0.75em 1em;
-      border-radius: 16px;
-      line-height: 1.4;
+      max-width: 75%; padding: 0.75em 1em;
+      border-radius: 16px; line-height: 1.4;
     }
     .message.user {
       align-self: flex-end;
-      background: #d1e7dd;
+      background: #d1e7dd !important;
     }
     .message.ai {
       align-self: flex-start;
-      background: #cfe2ff;
+      background: #cfe2ff !important;
     }
-
     #chat-input {
       width: calc(100% - 1em);
-      padding: 0.5em;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 0.75em;
+      padding: 0.5em; border: 1px solid #ccc;
+      border-radius: 8px; margin-bottom: 0.75em;
+      font-size: 1em;
     }
-
-    button { background: #4a90e2; color: #fff; border: none; padding: 0.75em 1.5em; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-
-    /* 支付选项 */
+    #chat-input::placeholder {
+      color: #999 !important; opacity: 1 !important;
+    }
+    button {
+      background: #4a90e2; color: #fff;
+      border: none; padding: 0.75em 1.5em;
+      border-radius: 8px; cursor: pointer;
+      font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
     .payment-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5em;
-      margin-top: 1em;
+      display: flex; flex-wrap: wrap; gap: 0.5em; margin-top: 1em;
     }
     .payment-button {
-      background: #4a90e2;
-      color: #fff;
-      padding: 0.75em 1em;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
+      background: #4a90e2; color: #fff;
+      padding: 0.75em 1em; border-radius: 8px;
+      text-decoration: none; font-weight: 600;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       transition: background 0.2s;
     }
     .payment-button:hover {
       background: #357ab8;
     }
+    ul { list-style: none; }
+    ul li { margin-bottom: 0.5em; padding-left: 1.25em; position: relative; }
+    ul li:before { content: '•'; position: absolute; left: 0; color: #4a90e2; }
+    a { color: #4a90e2; font-weight: 600; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>AI 智能工具平台</h1>
-      <p>3 次免費使用，更多功能請解鎖</p>
+      <select id="lang-select">
+        <option value="en">English</option>
+        <option value="zh">繁體中文</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="pt">Português</option>
+        <option value="ru">Русский</option>
+        <option value="ar">العربية</option>
+      </select>
+      <h1 id="title">AI Smart Tools</h1>
+      <p id="subtitle">3 free uses, then unlock more</p>
     </header>
 
-    <!-- 聊天區 -->
+    <!-- Chat Section -->
     <section id="chat-section">
-      <h2>AI 聊天機器人</h2>
+      <h2 id="chat-heading">AI Chatbot</h2>
       <div id="chat-window"></div>
-      <input type="text" id="chat-input" placeholder="請在此輸入您的問題..." />
-      <button id="send-button">發送</button>
-      <p id="usage-info">已使用 0/3 次免費</p>
+      <input type="text" id="chat-input" placeholder="Type a message..." />
+      <button id="send-button">Send</button>
+      <p id="usage-info">Used 0/3 free</p>
     </section>
 
-    <!-- 支付區（隱藏到用戶次數用完時顯示） -->
+    <!-- Payment Section -->
     <section id="payment-section" style="display:none;">
-      <h2>解鎖更多次數</h2>
-      <p>免費次數已用完，請選擇合適方案：</p>
+      <h2 id="payment-heading">Unlock More Uses</h2>
+      <p id="payment-text">Free uses exhausted, please pay to unlock:</p>
       <div class="payment-options">
-        <a class="payment-button" href="https://buy.stripe.com/3cI14oclq0yv8tG97TdQQ04" target="_blank">30 次 – $1.99</a>
-        <a class="payment-button" href="https://buy.stripe.com/5kQ6oI4SY2GD7pC0BndQQ03" target="_blank">100 次 – $4.99</a>
-        <a class="payment-button" href="https://buy.stripe.com/28E5kE7160yvh0c6ZLdQQ02" target="_blank">1 000 次 – $9.99/月</a>
-        <a class="payment-button" href="https://buy.stripe.com/00w00k716dlheS4fwhdQQ01" target="_blank">3 000 次 – $14.99/月</a>
+        <a class="payment-button" href="https://buy.stripe.com/3cI14oclq0yv8tG97TdQQ04" target="_blank">30 Calls – $1.99</a>
+        <a class="payment-button" href="https://buy.stripe.com/5kQ6oI4SY2GD7pC0BndQQ03" target="_blank">100 Calls – $4.99</a>
+        <a class="payment-button" href="https://buy.stripe.com/28E5kE7160yvh0c6ZLdQQ02" target="_blank">1,000 Calls – $9.99/month</a>
+        <a class="payment-button" href="https://buy.stripe.com/00w00k716dlheS4fwhdQQ01" target="_blank">3,000 Calls – $14.99/month</a>
       </div>
     </section>
 
+    <!-- Features Section -->
+    <section>
+      <h2 id="features-heading">Popular Features</h2>
+      <ul>
+        <li id="feature1">Text Translation (zh↔en)</li>
+        <li id="feature2">Article Summarization</li>
+        <li id="feature3">Grammar Check</li>
+        <li id="feature4">Keyword Extraction</li>
+        <li id="feature5">SEO Title Suggestions</li>
+      </ul>
+    </section>
   </div>
 
   <script>
+    // 1. Generate and store unique user ID
+    let userId = localStorage.getItem('userId');
+    if (!userId) {
+      userId = crypto.randomUUID ? crypto.randomUUID() : 'user-' + Date.now() + '-' + Math.floor(Math.random()*1e6);
+      localStorage.setItem('userId', userId);
+    }
+
     const workerUrl = 'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/';
     const maxFree = 3;
     let usage = parseInt(localStorage.getItem('ai_usage')) || 0;
@@ -122,7 +162,7 @@
     const paymentSec = document.getElementById('payment-section');
 
     function updateUsage() {
-      usageInfo.textContent = `已使用 ${usage}/${maxFree} 次免費`;
+      usageInfo.textContent = `Used ${usage}/${maxFree} free`;
       if (usage >= maxFree) {
         document.getElementById('chat-section').style.display = 'none';
         paymentSec.style.display = 'block';
@@ -133,7 +173,7 @@
       const text = chatInput.value.trim();
       if (!text || usage >= maxFree) return;
 
-      // 顯示使用者訊息
+      // Display user message
       const uDiv = document.createElement('div');
       uDiv.classList.add('message','user');
       uDiv.textContent = text;
@@ -144,35 +184,30 @@
       try {
         const res = await fetch(workerUrl, {
           method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ message: text })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, message: text })
         });
-
         let reply;
         if (res.headers.get('content-type')?.includes('application/json')) {
           reply = (await res.json()).reply;
         } else {
           reply = await res.text();
         }
-
-        // 顯示 AI 回覆
+        // Display AI reply
         const aDiv = document.createElement('div');
         aDiv.classList.add('message','ai');
         aDiv.textContent = reply;
         chatWindow.appendChild(aDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
-        // 更新次數
         usage++;
         localStorage.setItem('ai_usage', usage);
         updateUsage();
-
       } catch (err) {
         console.error(err);
       }
     });
 
-    // 啟動時更新顯示
     document.addEventListener('DOMContentLoaded', updateUsage);
   </script>
 </body>
