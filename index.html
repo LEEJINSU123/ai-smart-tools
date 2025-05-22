@@ -2,32 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AI Smart Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: #f4f4f9; color: #333; display: flex; flex-direction: column; align-items: center; padding: 1em; }
-    .container { width:100%; max-width:800px; background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); padding:2em; }
-    header { text-align:center; margin-bottom:2em; position:relative; }
-    header h1 { font-size:2em; font-weight:600; }
-    header p { color:#666; }
-    #lang-select { position:absolute; top:0; right:0; border:none; background:transparent; }
-    section { margin-bottom:2em; }
-    h2 { font-size:1.25em; margin-bottom:0.5em; }
-    form input, #chat-input { width:calc(100% - 1em); padding:0.5em; border:1px solid #ccc; border-radius:8px; margin-bottom:0.75em; }
-    button { background:#4a90e2; color:#fff; border:none; padding:0.75em 1.5em; border-radius:8px; cursor:pointer; }
-    #chat-window {
-      display:flex; flex-direction:column; gap:0.5em; padding:1em; height:300px;
-      overflow-y:auto; background:#f0f4f8!important; border:1px solid #e0e0e5; border-radius:12px;
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f4f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1em;
     }
-    .message { max-width:75%; padding:0.75em 1em; border-radius:16px; line-height:1.4; }
-    .message.user { align-self:flex-end; background:#d1e7dd!important; }
-    .message.ai { align-self:flex-start; background:#cfe2ff!important; }
-    ul { list-style:none; }
-    ul li { padding-left:1.25em; position:relative; }
-    ul li:before { content:'•'; position:absolute; left:0; color:#4a90e2; }
-    a { color:#4a90e2; }
+    .container {
+      width: 100%; max-width: 800px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 2em;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2em;
+      position: relative;
+    }
+    header h1 { font-size: 2em; font-weight: 600; }
+    header p  { color: #666; }
+    #lang-select {
+      position: absolute; top: 0; right: 0;
+      border: none; background: transparent;
+    }
+    section { margin-bottom: 2em; }
+    h2 { font-size: 1.25em; margin-bottom: 0.5em; }
+    form input[type="email"] {
+      width: calc(100% - 1em);
+      padding: 0.5em; border: 1px solid #ccc;
+      border-radius: 8px; margin-bottom: 0.75em;
+    }
+    /* 单独给聊天输入框占位符 */
+    #chat-input {
+      width: calc(100% - 1em);
+      padding: 0.5em; border: 1px solid #ccc;
+      border-radius: 8px; margin-bottom: 0.75em;
+    }
+    button {
+      background: #4a90e2; color: #fff;
+      border: none; padding: 0.75em 1.5em;
+      border-radius: 8px; cursor: pointer;
+      font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    /* 美化聊天区背景 & 增加磨砂效果 */
+    #chat-window {
+      display: flex; flex-direction: column; gap: 0.5em;
+      padding: 1em; height: 300px; overflow-y: auto;
+      background: url('https://your-cdn.com/chat-bg.png') no-repeat center/cover !important;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.1),
+                  0 4px 12px rgba(0,0,0,0.05);
+      border: none; border-radius: 12px;
+    }
+    .message {
+      max-width: 75%; padding: 0.75em 1em;
+      border-radius: 16px; line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+    .message.user {
+      align-self: flex-end;
+      background: rgba(209,231,221,0.8) !important;
+    }
+    .message.ai {
+      align-self: flex-start;
+      background: rgba(207,226,255,0.8) !important;
+    }
+    ul { list-style: none; }
+    ul li {
+      margin-bottom: 0.5em; padding-left: 1.25em;
+      position: relative;
+    }
+    ul li:before {
+      content: '•'; position: absolute; left: 0;
+      color: #4a90e2;
+    }
+    a { color: #4a90e2; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -36,7 +93,14 @@
       <select id="lang-select">
         <option value="en">English</option>
         <option value="zh">繁體中文</option>
-        <!-- 其他語言 -->
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="pt">Português</option>
+        <option value="ru">Русский</option>
+        <option value="ar">العربية</option>
       </select>
       <h1 id="title"></h1>
       <p id="subtitle"></p>
@@ -93,7 +157,7 @@
         paymentText: 'Free uses exhausted, please pay to unlock:',
         paymentButton: 'Pay Now',
         featuresHeading: 'Popular Features',
-        feature1: 'Text Translation',
+        feature1: 'Text Translation (zh↔en)',
         feature2: 'Article Summarization',
         feature3: 'Grammar Check',
         feature4: 'Keyword Extraction',
@@ -106,19 +170,20 @@
         emailPlaceholder: '你的郵箱',
         emailButton: '訂閱',
         chatHeading: 'AI 聊天機器人',
-        chatPlaceholder: '輸入訊息...',
+        chatPlaceholder: '輸入訊息…',
         sendButton: '發送',
         usageLabel: '已使用 {used}/{total} 次免費',
         paymentHeading: '解鎖更多次數',
         paymentText: '免費次數已用完，請付費解鎖：',
         paymentButton: '立即支付',
         featuresHeading: '熱門功能',
-        feature1: '文本翻譯',
+        feature1: '文本翻譯 (中↔英)',
         feature2: '文章摘要',
         feature3: '語法檢查',
         feature4: '關鍵字提取',
         feature5: 'SEO 標題建議'
       }
+      // 其他語言同理…
     };
 
     const workerUrl = 'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/';
@@ -150,10 +215,24 @@
 
     function setLanguage(lang) {
       const t = translations[lang] || translations.en;
-      Object.keys(elems).forEach(k => {
-        if (t[k]) elems[k].textContent = t[k].replace ? t[k] : t[k];
-        if (k === 'emailInput' || k === 'chatInput') elems[k].placeholder = t.emailPlaceholder || t.chatPlaceholder;
-      });
+      elems.title.textContent       = t.title;
+      elems.subtitle.textContent    = t.subtitle;
+      elems.emailHeading.textContent= t.emailHeading;
+      elems.emailInput.placeholder  = t.emailPlaceholder;
+      elems.emailButton.textContent = t.emailButton;
+      elems.chatHeading.textContent = t.chatHeading;
+      // —— 这里改为 chatPlaceholder
+      elems.chatInput.placeholder   = t.chatPlaceholder;
+      elems.sendButton.textContent  = t.sendButton;
+      elems.paymentHeading.textContent = t.paymentHeading;
+      elems.paymentText.textContent    = t.paymentText;
+      elems.paymentButton.textContent  = t.paymentButton;
+      elems.featuresHeading.textContent= t.featuresHeading;
+      elems.feature1.textContent       = t.feature1;
+      elems.feature2.textContent       = t.feature2;
+      elems.feature3.textContent       = t.feature3;
+      elems.feature4.textContent       = t.feature4;
+      elems.feature5.textContent       = t.feature5;
       updateUsageLabel();
     }
 
@@ -174,40 +253,38 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('lang') || navigator.language.slice(0, 2);
+      const saved = localStorage.getItem('lang') || navigator.language.slice(0,2);
       elems.langSelect.value = translations[saved] ? saved : 'en';
       setLanguage(elems.langSelect.value);
     });
 
-    document.getElementById('send-button').addEventListener('click', async () => {
+    elems.sendButton.addEventListener('click', async () => {
       const text = elems.chatInput.value.trim();
       if (!text || usage >= maxFree) return;
 
-      const win = document.getElementById('chat-window');
+      const win = elems.chatWindow = document.getElementById('chat-window');
       const userDiv = document.createElement('div');
-      userDiv.classList.add('message', 'user');
+      userDiv.classList.add('message','user');
       userDiv.textContent = text;
       win.appendChild(userDiv);
       elems.chatInput.value = '';
 
       try {
         const res = await fetch(workerUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
           body: JSON.stringify({ message: text })
         });
-
-        let replyText;
         const ct = res.headers.get('content-type') || '';
+        let replyText;
         if (ct.includes('application/json')) {
-          const data = await res.json();
-          replyText = data.reply || 'No reply';
+          const json = await res.json();
+          replyText = json.reply;
         } else {
           replyText = await res.text();
         }
-
         const aiDiv = document.createElement('div');
-        aiDiv.classList.add('message', 'ai');
+        aiDiv.classList.add('message','ai');
         aiDiv.textContent = replyText;
         win.appendChild(aiDiv);
 
@@ -215,7 +292,7 @@
         localStorage.setItem('ai_usage', usage);
         updateUsageLabel();
         win.scrollTop = win.scrollHeight;
-      } catch (e) {
+      } catch(e) {
         console.error(e);
       }
     });
