@@ -4,88 +4,74 @@
   <meta charset="UTF-8" />
   <title>AI Chat Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- 你原来的样式、字体等 -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,500,600" rel="stylesheet" />
-
   <style>
     body {
       font-family: 'Source Sans Pro', sans-serif;
       background: #f3f4f6;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      color: #333;
+      margin: 0; padding: 0;
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh; color: #333;
     }
     .container {
-      background: #fff;
-      border-radius: 12px;
-      padding: 32px;
-      margin: 40px 0;
-      width: 100%;
-      max-width: 600px;
+      background: #fff; border-radius: 12px;
+      padding: 32px; margin: 40px 0;
+      width: 100%; max-width: 600px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
-    h1 {
-      margin-top: 0;
-      font-size: 1.75rem;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    h1 { margin-top: 0; font-size: 1.75rem; }
+    form { display: flex; flex-direction: column; gap: 16px; }
     input, textarea, select, button {
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      font-size: 1rem; border: 1px solid #ccc; border-radius: 6px;
     }
-    input, select {
-      height: 44px;
-      padding: 0 12px;
-    }
-    textarea {
-      min-height: 120px;
-      padding: 12px;
-      resize: vertical;
-    }
+    input, select { height: 44px; padding: 0 12px; }
+    textarea { min-height: 120px; padding: 12px; resize: vertical; }
     button {
-      background: #006cff;
-      color: #fff;
-      border: none;
-      height: 50px;
-      cursor: pointer;
+      background: #006cff; color: #fff;
+      border: none; height: 50px; cursor: pointer;
     }
-    button:disabled {
-      background: #aacfff;
-      cursor: not-allowed;
-    }
-    /* 美化 chat-output */
+    button:disabled { background: #aacfff; cursor: not-allowed; }
     #chat-output {
-      background-color: #f9fafb;
-      border-radius: 8px;
-      padding: 16px;
-      min-height: 100px;
-      margin-top: 24px;
-      white-space: pre-wrap;
+      background: #f9fafb; border-radius: 8px; padding: 16px;
+      min-height: 100px; margin-top: 24px; white-space: pre-wrap;
       line-height: 1.5;
     }
+    .purchase-links { margin-top: 12px; }
+    .purchase-links a {
+      display: inline-block; margin-right: 8px;
+      padding: 8px 12px; background: #28a745; color: #fff;
+      border-radius: 4px; text-decoration: none;
+    }
   </style>
-
-  <!-- i18next -->
   <script src="https://unpkg.com/i18next@21.6.14/dist/umd/i18next.min.js"></script>
 </head>
 <body>
   <div class="container">
     <h1 data-i18n="title">AI Chat Assistant</h1>
-    <!-- 语言选择下拉 -->
+    <!-- 语言切换 -->
     <div style="text-align: right; margin-bottom: 16px;">
       <select id="lang-switch">
+        <!-- 覆盖全球主流 20+ 语种 -->
         <option value="en">English</option>
         <option value="zh">简体中文</option>
-        <!-- 按需再加其它语种 -->
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="pt">Português</option>
+        <option value="ru">Русский</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="it">Italiano</option>
+        <option value="ar">العربية</option>
+        <option value="hi">हिन्दी</option>
+        <option value="bn">বাংলা</option>
+        <option value="vi">Tiếng Việt</option>
+        <option value="th">ไทย</option>
+        <option value="tr">Türkçe</option>
+        <option value="ms">Bahasa Melayu</option>
+        <option value="id">Bahasa Indonesia</option>
+        <option value="pl">Polski</option>
+        <option value="nl">Nederlands</option>
       </select>
     </div>
 
@@ -110,7 +96,7 @@
   </div>
 
   <script>
-  // 1. 初始化多语言资源
+  // —— 1. 国际化内容 —— 
   const resources = {
     en: {
       translation: {
@@ -118,7 +104,7 @@
         emailPlaceholder: 'Enter your email',
         messagePlaceholder: 'Type your question',
         sendButton: 'Send',
-        paidNotice: 'Free limit reached, please pay to unlock more.',
+        paidNotice: 'Free limit reached, please purchase to unlock more uses.',
         networkError: 'Network error, please try again later.'
       }
     },
@@ -131,27 +117,18 @@
         paidNotice: '免费次数已用完，请付费解锁更多次数。',
         networkError: '网络错误，请稍后重试。'
       }
-    }
-    // …如需覆盖更多语言，按同样格式补充…
+    },
+    // …其它语种可按此格式补充…
   };
 
-  i18next.init({
-    lng: 'en',
-    resources
-  }, () => {
-    updateContent();
-  });
-
-  // 2. 切换语言
-  document.getElementById('lang-switch').addEventListener('change', e => {
-    i18next.changeLanguage(e.target.value, updateContent);
-  });
+  i18next.init({ lng: 'en', resources }, updateContent);
+  document.getElementById('lang-switch')
+    .addEventListener('change', e => i18next.changeLanguage(e.target.value, updateContent));
 
   function updateContent() {
     document.querySelectorAll('[data-i18n]').forEach(node => {
       const key = node.getAttribute('data-i18n');
-      if (key.includes('[')) {
-        // placeholder 或其它属性
+      if (key.startsWith('[')) {
         const [attr, path] = key.slice(1,-1).split(']');
         node.setAttribute(attr, i18next.t(path));
       } else {
@@ -160,44 +137,49 @@
     });
   }
 
-  // 3. 拦截表单，AJAX 提交
-  document.getElementById('chat-form').addEventListener('submit', async e => {
-    e.preventDefault(); // 阻止整页刷新
+  // —— 2. 拦截表单提交 & 显示结果 + 购买链接 —— 
+  document.getElementById('chat-form')
+    .addEventListener('submit', async e => {
+      e.preventDefault();
+      const email   = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const out     = document.getElementById('chat-output');
+      const btn     = document.getElementById('send-btn');
 
-    const email   = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
-    const output  = document.getElementById('chat-output');
-    const btn     = document.getElementById('send-btn');
+      out.innerHTML = '';
+      btn.disabled  = true;
 
-    // 清空上次结果，禁用按钮
-    output.textContent = '';
-    btn.disabled = true;
+      try {
+        const res = await fetch(
+          'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/',  // ← Worker 域名
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, message })
+          }
+        );
+        const data = await res.json().catch(()=>({}));
 
-    try {
-      const res = await fetch(
-        'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/',  // ← 你的 Worker 域名
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, message })
+        if (!res.ok) {
+          // 402 或自定义错误都当免费用完处理
+          out.textContent = data.error || i18next.t('paidNotice');
+          // 显示购买按钮
+          out.innerHTML += `
+            <div class="purchase-links">
+              <a href="https://buy.stripe.com/3cI14oclq0yv8tG97TdQQ04" target="_blank">30 uses $1.99</a>
+              <a href="https://buy.stripe.com/5kQ6oI4SY2GD7pC0BndQQ03" target="_blank">100 uses $4.99</a>
+              <a href="https://buy.stripe.com/28E5kE7160yvh0c6ZLdQQ02" target="_blank">1,000 uses $9.99</a>
+              <a href="https://buy.stripe.com/00w00k716dlheS4fwhdQQ01" target="_blank">3,000 uses $14.99</a>
+            </div>`;
+        } else {
+          out.textContent = data.reply;
         }
-      );
-      const json = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        // 402、400 或后端付费提示
-        output.textContent = json.error || i18next.t('paidNotice');
-      } else {
-        // 成功回复
-        output.textContent = json.reply;
+      } catch (_){
+        out.textContent = i18next.t('networkError');
+      } finally {
+        btn.disabled = false;
       }
-    } catch (err) {
-      // 网络异常
-      output.textContent = i18next.t('networkError');
-    } finally {
-      btn.disabled = false;
-    }
-  });
+    });
   </script>
 </body>
 </html>
