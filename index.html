@@ -4,153 +4,163 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI 智能工具平台</title>
-  <!-- 保留你原有的字体引用 -->
   <link
-    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,500,600&display=swap"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,500,600"
     rel="stylesheet"
   />
 
   <style>
-    /* ===== 全局样式 ===== */
     body {
+      font-family: 'Source Sans Pro', sans-serif;
+      background: #f0f2f5;
       margin: 0;
       padding: 0;
-      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: #f0f2f5;
     }
     .container {
       max-width: 600px;
-      margin: 40px auto;
+      margin: 2rem auto;
       background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-      padding: 24px;
-      box-sizing: border-box;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      padding: 2rem;
     }
     h1 {
-      margin-top: 0;
+      margin-bottom: 1rem;
       font-weight: 500;
-      font-size: 24px;
-      color: #333;
     }
-
-    /* ===== 聊天表单样式 ===== */
-    #chat-form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 16px;
-    }
-    #chat-form input,
-    #chat-form textarea {
-      font-size: 16px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
+    form#chat-form input,
+    form#chat-form textarea {
       width: 100%;
-      font-family: inherit;
+      box-sizing: border-box;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
     }
-    #chat-form button {
-      background: #007bff;
+    form#chat-form button {
+      width: 100%;
+      padding: 0.85rem;
+      background: #0070f3;
       color: #fff;
       border: none;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    #chat-form button:hover {
-      background: #0056b3;
-    }
-
-    /* ===== 聊天输出区域美化 ===== */
-    #chat-output {
-      margin-top: 20px;
-      background: #f7f9fc;
-      border: 1px solid #e1e5ea;
       border-radius: 6px;
-      padding: 16px;
-      min-height: 120px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    #chat-output {
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px;
+      min-height: 4rem;
+      margin-top: 1.5rem;
       white-space: pre-wrap;
       color: #333;
-      font-size: 15px;
-      line-height: 1.6;
+    }
+    #payment {
+      display: none;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    #payment p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #e03131;
+    }
+    #payment .btn {
+      display: inline-block;
+      margin: 0.25rem;
+      padding: 0.6rem 1rem;
+      background: #009e60;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.95rem;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <!-- 标题 -->
     <h1>AI 智能工具平台</h1>
 
-    <!-- 表单 -->
     <form id="chat-form">
       <input
         type="email"
-        id="email-input"
-        placeholder="请输入您的邮箱"
+        name="email"
+        placeholder="请输入你的邮箱"
         required
       />
       <textarea
-        id="message-input"
+        name="message"
         rows="4"
-        placeholder="请输入您的问题…"
+        placeholder="请输入你的问题"
+        required
       ></textarea>
       <button type="submit">发送</button>
     </form>
 
-    <!-- 结果区 -->
     <div id="chat-output"></div>
+
+    <div id="payment">
+      <p>免费次数已用完，请付费解锁更多次数：</p>
+      <a href="https://buy.stripe.com/3cI14oclq0yv8tG97TdQQ04" class="btn">
+        购买 30 次 – $1.99
+      </a>
+      <a href="https://buy.stripe.com/5kQ6oI4SY2GD7pC0BndQQ03" class="btn">
+        购买 100 次 – $4.99
+      </a>
+      <a href="https://buy.stripe.com/28E5kE7160yvh0c6ZLdQQ02" class="btn">
+        购买 1,000 次 – $9.99
+      </a>
+      <a href="https://buy.stripe.com/00w00k716dlheS4fwhdQQ01" class="btn">
+        购买 3,000 次 – $14.99
+      </a>
+    </div>
   </div>
 
-  <!-- 拦截表单并发请求到你的 Worker -->
   <script>
-    const endpoint =
-      'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/';
+    const form = document.getElementById('chat-form');
+    const output = document.getElementById('chat-output');
+    const payment = document.getElementById('payment');
 
-    document
-      .getElementById('chat-form')
-      .addEventListener('submit', async (e) => {
-        e.preventDefault();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      payment.style.display = 'none';
+      output.textContent = '正在发送…';
 
-        const email = document
-          .getElementById('email-input')
-          .value.trim();
-        const message = document
-          .getElementById('message-input')
-          .value.trim();
-        const output = document.getElementById('chat-output');
+      const formData = new FormData(form);
+      const body = {
+        email: formData.get('email'),
+        message: formData.get('message'),
+      };
 
-        output.textContent = '正在发送…';
-
-        try {
-          const res = await fetch(endpoint, {
+      try {
+        const res = await fetch(
+          'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/',
+          {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, message }),
-          });
-
-          if (res.status === 402) {
-            output.textContent =
-              '免费次数已用完，请付费解锁更多次数。';
-            return;
+            body: JSON.stringify(body),
           }
-          if (!res.ok) {
-            output.textContent = `请求失败：${res.status}`;
-            return;
-          }
+        );
 
-          const { reply } = await res.json();
-          output.textContent = reply;
-          document.getElementById('message-input').value = '';
-        } catch (err) {
-          console.error(err);
-          output.textContent = '网络错误，请稍后重试。';
+        if (res.status === 402) {
+          output.textContent = '';
+          payment.style.display = 'block';
+          return;
         }
-      });
+
+        if (!res.ok) {
+          throw new Error(`网络错误：${res.status}`);
+        }
+
+        const data = await res.json();
+        output.textContent = data.reply || '接口无返回内容';
+      } catch (err) {
+        output.textContent = `网络错误，请稍后重试。\n${err.message}`;
+      }
+    });
   </script>
 </body>
 </html>
