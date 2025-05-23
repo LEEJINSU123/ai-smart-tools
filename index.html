@@ -2,213 +2,202 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AI 智能工具平台</title>
-
-  <!-- i18next 核心 -->
-  <script src="https://unpkg.com/i18next@21.6.8/dist/umd/i18next.min.js"></script>
+  <title>AI Chat Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- 你原来的样式、字体等 -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,500,600" rel="stylesheet" />
 
   <style>
     body {
-      font-family: sans-serif;
-      background: #f0f2f5;
+      font-family: 'Source Sans Pro', sans-serif;
+      background: #f3f4f6;
       margin: 0;
-      padding: 2rem;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      color: #333;
     }
     .container {
-      max-width: 600px;
-      margin: auto;
       background: #fff;
-      border-radius: 8px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    #lang-switcher {
-      float: right;
-      padding: 0.3em;
-      font-size: 0.9em;
+      border-radius: 12px;
+      padding: 32px;
+      margin: 40px 0;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
     h1 {
       margin-top: 0;
+      font-size: 1.75rem;
     }
-    form { margin-top: 2rem; }
-    input, textarea {
-      width: 100%;
-      padding: 0.8em;
-      margin-bottom: 1em;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    input, textarea, select, button {
+      font-size: 1rem;
       border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1em;
-      box-sizing: border-box;
+      border-radius: 6px;
+    }
+    input, select {
+      height: 44px;
+      padding: 0 12px;
+    }
+    textarea {
+      min-height: 120px;
+      padding: 12px;
+      resize: vertical;
     }
     button {
-      width: 100%;
-      padding: 1em;
-      font-size: 1.1em;
+      background: #006cff;
       color: #fff;
-      background: #007bff;
       border: none;
-      border-radius: 4px;
+      height: 50px;
       cursor: pointer;
     }
-    button:disabled { background: #999; cursor: not-allowed; }
+    button:disabled {
+      background: #aacfff;
+      cursor: not-allowed;
+    }
+    /* 美化 chat-output */
     #chat-output {
-      margin-top: 1.5rem;
-      padding: 1em;
-      background: #f8f9fa;
-      border-radius: 6px;
-      min-height: 4em;
+      background-color: #f9fafb;
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 100px;
+      margin-top: 24px;
+      white-space: pre-wrap;
+      line-height: 1.5;
     }
   </style>
+
+  <!-- i18next -->
+  <script src="https://unpkg.com/i18next@21.6.14/dist/umd/i18next.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <!-- 语言下拉 -->
-    <select id="lang-switcher"></select>
-
-    <h1 id="site-title"></h1>
+    <h1 data-i18n="title">AI Chat Assistant</h1>
+    <!-- 语言选择下拉 -->
+    <div style="text-align: right; margin-bottom: 16px;">
+      <select id="lang-switch">
+        <option value="en">English</option>
+        <option value="zh">简体中文</option>
+        <!-- 按需再加其它语种 -->
+      </select>
+    </div>
 
     <form id="chat-form">
-      <input id="email" type="email" required />
-      <textarea id="message" rows="4" required></textarea>
-      <button id="send-btn" type="submit"></button>
+      <input
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        required
+        data-i18n="[placeholder]emailPlaceholder"
+      />
+      <textarea
+        id="message"
+        placeholder="Type your question"
+        required
+        data-i18n="[placeholder]messagePlaceholder"
+      ></textarea>
+      <button id="send-btn" type="submit" data-i18n="sendButton">Send</button>
     </form>
 
     <div id="chat-output"></div>
   </div>
 
   <script>
-  // —— 1. 先初始化 i18next —— 
-  i18next.init({
-    lng: 'en',                // 默认语言
-    fallbackLng: 'en',        // 找不到时回退
-    resources: {
-      en: { translation: {
-        title:       'AI Chat Assistant',
-        emailPH:     'Enter your email',
-        msgPH:       'Type your question',
-        sendBtn:     'Send',
-        paidNotice:  'You’ve exhausted your free quota. Please subscribe to unlock more.',
-      }},
-      zh: { translation: {
-        title:       'AI 智能工具平台',
-        emailPH:     '请输入你的邮箱',
-        msgPH:       '请输入你的问题',
-        sendBtn:     '发送',
-        paidNotice:  '免费次数已用完，请付费解锁更多次数。',
-      }},
-      es: { translation: {
-        title:       'Asistente de IA',
-        emailPH:     'Ingresa tu correo',
-        msgPH:       'Escribe tu pregunta',
-        sendBtn:     'Enviar',
-        paidNotice:  'Has agotado tu cuota gratuita. Suscríbete para más.',
-      }},
-      ar: { translation: {
-        title:       'مساعد الذكاء الاصطناعي',
-        emailPH:     'أدخل بريدك الإلكتروني',
-        msgPH:       'اكتب سؤالك',
-        sendBtn:     'إرسال',
-        paidNotice:  'لقد استنفدت حصتك المجانية. يرجى الاشتراك للمزيد.',
-      }},
-      ru: { translation: {
-        title:       'ИИ Ассистент',
-        emailPH:     'Введите вашу почту',
-        msgPH:       'Введите ваш вопрос',
-        sendBtn:     'Отправить',
-        paidNotice:  'Ваш бесплатный лимит истек. Подпишитесь для продолжения.',
-      }},
-      ja: { translation: {
-        title:       'AI チャットアシスタント',
-        emailPH:     'メールアドレスを入力',
-        msgPH:       '質問を入力してください',
-        sendBtn:     '送信',
-        paidNotice:  '無料利用回数を使い切りました。サブスクライブしてください。',
-      }},
-      pt: { translation: {
-        title:       'Assistente de IA',
-        emailPH:     'Digite seu e-mail',
-        msgPH:       'Digite sua pergunta',
-        sendBtn:     'Enviar',
-        paidNotice:  'Você esgotou sua cota gratuita. Assine para continuar.',
-      }},
-      hi: { translation: {
-        title:       'एआई चैट सहायक',
-        emailPH:     'अपना ईमेल दर्ज करें',
-        msgPH:       'अपना प्रश्न लिखें',
-        sendBtn:     'भेजें',
-        paidNotice:  'आपकी नि:शुल्क सीमा समाप्त हो चुकी है। अधिक के लिए सदस्यता लें।',
-      }},
-      de: { translation: {
-        title:       'KI-Chat-Assistent',
-        emailPH:     'Gib deine E-Mail ein',
-        msgPH:       'Gib deine Frage ein',
-        sendBtn:     'Senden',
-        paidNotice:  'Dein Gratis-Kontingent ist aufgebraucht. Bitte abonniere für mehr.',
-      }},
-      fr: { translation: {
-        title:       'Assistant IA',
-        emailPH:     'Entrez votre e-mail',
-        msgPH:       'Tapez votre question',
-        sendBtn:     'Envoyer',
-        paidNotice:  'Votre quota gratuit est épuisé. Abonnez-vous pour continuer.',
-      }},
-      /* 你可以在这里继续添加更多语言：
-      es, ar, ru, ja, pt, hi, de, fr, bn, it, tr, vi, ko, nl, pl, th…
-      */
+  // 1. 初始化多语言资源
+  const resources = {
+    en: {
+      translation: {
+        title: 'AI Chat Assistant',
+        emailPlaceholder: 'Enter your email',
+        messagePlaceholder: 'Type your question',
+        sendButton: 'Send',
+        paidNotice: 'Free limit reached, please pay to unlock more.',
+        networkError: 'Network error, please try again later.'
+      }
+    },
+    zh: {
+      translation: {
+        title: 'AI 智能工具平台',
+        emailPlaceholder: '请输入你的邮箱',
+        messagePlaceholder: '请输入你的问题',
+        sendButton: '发送',
+        paidNotice: '免费次数已用完，请付费解锁更多次数。',
+        networkError: '网络错误，请稍后重试。'
+      }
     }
-  }, function(err, t) {
-    // 初始化完成后渲染一次
+    // …如需覆盖更多语言，按同样格式补充…
+  };
+
+  i18next.init({
+    lng: 'en',
+    resources
+  }, () => {
     updateContent();
   });
 
-
-  // —— 2. 准备下拉列表 —— 
-  const LANGS = [
-    ['en','English'],
-    ['zh','简体中文'],
-    ['es','Español'],
-    ['ar','العربية'],
-    ['ru','Русский'],
-    ['ja','日本語'],
-    ['pt','Português'],
-    ['hi','हिन्दी'],
-    ['de','Deutsch'],
-    ['fr','Français'],
-    ['it','Italiano'],
-    ['tr','Türkçe'],
-    ['vi','Tiếng Việt'],
-    ['ko','한국어'],
-    ['nl','Nederlands'],
-    ['pl','Polski'],
-    ['th','ภาษาไทย'],
-    // …如果要更多语言，加到这里即可
-  ];
-
-  const sel = document.getElementById('lang-switcher');
-  LANGS.forEach(([code,name])=>{
-    const opt = document.createElement('option');
-    opt.value = code;
-    opt.textContent = name;
-    sel.appendChild(opt);
+  // 2. 切换语言
+  document.getElementById('lang-switch').addEventListener('change', e => {
+    i18next.changeLanguage(e.target.value, updateContent);
   });
-  sel.value = i18next.language;    // 设为当前
-  sel.onchange = () => {
-    i18next.changeLanguage(sel.value, updateContent);
-  };
 
-
-  // —— 3. 把翻译填到页面上 —— 
   function updateContent() {
-    document.documentElement.lang = i18next.language;
-    document.getElementById('site-title').textContent = i18next.t('title');
-    document.getElementById('email').placeholder    = i18next.t('emailPH');
-    document.getElementById('message').placeholder  = i18next.t('msgPH');
-    document.getElementById('send-btn').textContent = i18next.t('sendBtn');
-    // ……用同样方法，更改“付费提示”等……
+    document.querySelectorAll('[data-i18n]').forEach(node => {
+      const key = node.getAttribute('data-i18n');
+      if (key.includes('[')) {
+        // placeholder 或其它属性
+        const [attr, path] = key.slice(1,-1).split(']');
+        node.setAttribute(attr, i18next.t(path));
+      } else {
+        node.textContent = i18next.t(key);
+      }
+    });
   }
 
-  // （后续再加你的表单拦截、fetch、KV 计数逻辑就能在多语环境下一起工作）
+  // 3. 拦截表单，AJAX 提交
+  document.getElementById('chat-form').addEventListener('submit', async e => {
+    e.preventDefault(); // 阻止整页刷新
+
+    const email   = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    const output  = document.getElementById('chat-output');
+    const btn     = document.getElementById('send-btn');
+
+    // 清空上次结果，禁用按钮
+    output.textContent = '';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(
+        'https://mute-hall-8386.ljs54leejinsu88888.workers.dev/',  // ← 你的 Worker 域名
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, message })
+        }
+      );
+      const json = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        // 402、400 或后端付费提示
+        output.textContent = json.error || i18next.t('paidNotice');
+      } else {
+        // 成功回复
+        output.textContent = json.reply;
+      }
+    } catch (err) {
+      // 网络异常
+      output.textContent = i18next.t('networkError');
+    } finally {
+      btn.disabled = false;
+    }
+  });
   </script>
 </body>
 </html>
